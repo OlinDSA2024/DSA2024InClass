@@ -110,6 +110,42 @@ class GraphTraversal<VertexType> {
     }
 
     /**
+     * We use Kahn's algorithm (https://en.wikipedia.org/wiki/Topological_sorting)
+     * @return true iff the graph is a directed-acyclic graph
+     */
+    fun isDAG(): Boolean {
+        val L: MutableList<VertexType> = mutableListOf()
+        val gCopy = GraphTraversal<VertexType>()
+        gCopy.vertices = vertices.toMutableSet()
+        gCopy.edges = edges.toMutableMap()
+        val S = gCopy.getNodesWithNoIncomingEdges()
+
+        while (S.isNotEmpty()) {
+            val n = S.first()
+            println(n)
+            S.remove(n)
+            L.add(n)
+            val currentNeighbors = gCopy.edges[n] ?: mutableSetOf()
+            // remove all edges coming from n
+            gCopy.edges.remove(n)
+            // TODO: this is not efficient, we would like a way to find incoming edges easily
+            val nodesToAdd = currentNeighbors.intersect(gCopy.getNodesWithNoIncomingEdges())
+            S.addAll(nodesToAdd)
+        }
+        return gCopy.edges.isEmpty()
+    }
+
+    private fun getNodesWithNoIncomingEdges(): MutableSet<VertexType> {
+        val unmarked = vertices.toMutableSet()
+        for (vertex in vertices) {
+            edges[vertex]?.forEach() { neighbor ->
+                unmarked.remove(neighbor)
+            }
+        }
+        return unmarked
+    }
+
+    /**
      * Backtrack through the path to reconstruct the path
      * from [end] to the path start
      *

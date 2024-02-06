@@ -31,6 +31,14 @@ class GraphTraversalTest {
     }
 
     @Test
+    fun dagTest() {
+        val g = makeGraph()
+        assertTrue(g.isDAG())
+        g.addEdge("F", "A")
+        assertFalse(g.isDAG())
+    }
+
+    @Test
     fun dfsTest() {
         val g = makeGraph()
         val result = g.dfs("A", "E")
