@@ -5,3 +5,4 @@ rootProject.name = "DSA2024InClass"
 include("Day05SampleSolution")
 include("Day06SampleSolution")
 include("Day04SampleSolution")
+include("Day10SampleSolution")
